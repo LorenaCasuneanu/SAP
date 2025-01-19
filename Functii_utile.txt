@@ -1,0 +1,147 @@
+////////   JAVA 	///////////////
+
+--> CITIRE DUPA UN ANUMIT CHARATER DINTR-UN FILE
+
+        String text = "Ana = o2";
+        char delimiter = '=';
+
+        int pos = text.indexOf(delimiter);
+        String result = "";
+
+        if (pos != -1) { // Check if = exists
+            result = text.substring(pos + 1).trim(); // Extract substring after '=' and trim spaces
+        }
+
+        System.out.println("Substring after '" + delimiter + "': " + result);
+
+
+
+--> din byte array in HEX
+	static String getHexFromByteArray(byte[] values) {
+		StringBuilder sb = new StringBuilder();
+		for(byte value : values) {
+			sb.append(String.format("%02x", value));
+		}
+		return sb.toString();
+	}
+	SAU
+		public static void printHex(byte[] values) {
+		System.out.println("HEX: ");
+		for(byte b : values) {
+			System.out.printf(" %02x", b);
+		}
+	}
+	
+--> din HEX in byteArray	
+		public static byte[] hexStringToByteArray(String s) {
+	    int len = s.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+	                             + Character.digit(s.charAt(i+1), 16));
+	    }
+	    return data;
+	}
+	
+--> Converting numbers to STRING: INT sau BYTE to String sub forma binara sau sub forma hexazecimala
+		int value = 33;
+		byte smallValue = 23;
+		String binaryRep = Integer.toBinaryString(value);
+		String hexRep = Integer.toHexString(value);	
+
+-->  Converting numbers to INT din STRING
+		///from string to numbers
+		Integer initialValue = Integer.parseInt(hexRep,16);
+		initialValue = Integer.parseInt(binaryRep,2);
+
+--> am array de bytes HEX values si vreau din el textul in hex:  --> sau folosesc functia de mai sus --> getHexFromByteArray
+	byte[] hash = {(byte)23, (byte)-23, (byte)10, (byte)5};
+		
+		sb = new StringBuilder();
+		for(int i = 0; i < hash.length; i++) {
+			sb.append(getByteUnsignedHexRepresentation(hash[i]));
+		}
+		System.out.println("The hash is " + sb.toString().toUpperCase());
+		
+		System.out.println("The hash is " + getHexFromByteArray(hash));
+		
+				
+--> parcurgere fisiere folder
+
+	public static void listFolder(File repository) {
+		if(repository.exists() && repository.isDirectory()) {
+			//print location content
+			File[] items = repository.listFiles();
+			for(File item : items) {
+				System.out.println(item.getName() + " - " +
+						(item.isFile() ? " FILE" : "FOLDER"));
+				System.out.println(item.getAbsolutePath());
+				if(item.isDirectory())
+					listFolder(item);
+			}
+		}
+		
+--> calcularea HASH-ului unui fisiere
+
+		//compute the hash of a file
+		//we read all file types as binary
+		File file = new File("Message.txt");
+		if(!file.exists())
+			System.out.println("************* The file is not there");
+		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		
+		md = MessageDigest.getInstance("SHA-1");
+		byte[] buffer = new byte[8];
+		
+		do {
+			int noBytes = bis.read(buffer); //we try to read 8 bytes
+			if(noBytes != -1) {
+				md.update(buffer, 0, noBytes);
+			} else {break;}
+		}while(true);
+		
+		//get final hash
+		hashValue = md.digest();
+
+--> encoding/decode base64
+
+		//enconding base64
+		String value1Base64 = Base64.getEncoder().encodeToString(values);
+		String value2Base64 = Base64.getEncoder().encodeToString(values2);		
+		
+		//decoding
+		byte[] initialValues = Base64.getDecoder().decode(value1Base64);
+		printHex(initialValues);
+		
+
+--> Pentru BouncyCastleProvider sunt urmatorii pasi:
+     1. Click pe proiect -> Proprietati -> Java Build Path -> Libraries -> ModulePath
+	 2. Add External JARs -> si in Downloands este BouNCYcastle jar
+	 
+     import org.bouncycastle.jce.provider.BouncyCastleProvider;
+	 
+	 
+////////// CPP   //////////// 
+// Convert a string of hexadecimals into a byte array
+static int hextext2bin(std::string hextext, unsigned char* bin)
+{
+	unsigned int i;
+	unsigned int uchr;
+	int res;
+
+	for (i = 0; i < hextext.length(); i += 2) {
+		res = sscanf(hextext.c_str() + i, "%2x", &uchr);
+		if (!res) {
+			/* return 0 immediately */
+			return res;
+		}
+		bin[i / 2] = uchr;
+	}
+	return (i / 2);
+}
+
+/////// CITIRE DUPA UN ANUMIT CHARATER DINTR-UN FILE//////
+	size_t pos = buffer.find("=");
+			if (pos != string::npos) {
+				string hash = buffer.substr(pos + 2);
