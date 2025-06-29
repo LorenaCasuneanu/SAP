@@ -26,7 +26,7 @@ public class KeyStoreManager {
 		
 		FileInputStream fis = new FileInputStream(file);
 		
-		KeyStore ks = KeyStore.getInstance(keyStoreType);
+		KeyStore ks = KeyStore.getInstance(keyStoreType);  //KeyStore.getDefaultType()
 		ks.load(fis, keyStorePass.toCharArray());
 		
 		fis.close();
