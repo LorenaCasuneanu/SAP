@@ -1,4 +1,6 @@
  
+// !!!!!!!!! STRING -> BYTE []   cu    str.c_str() sau str.data()        (ultimul e fara null character la final)
+
 // SCRIU INTR-UN FISIER TOTI BYTES DINTR-O DATA (MERGEM PENTRU SEMNATURA)
 {
 	FILE* signature = fopen("esign.sig", "w+");

@@ -1,0 +1,38 @@
+Modes of Operation:
+ECB (Electronic Codebook):
+
+Example: Cipher.getInstance("AES/ECB/PKCS5Padding")
+Note: ECB is not recommended for encrypting multiple blocks of data because it is not semantically secure.
+CBC (Cipher Block Chaining):
+
+Example: Cipher.getInstance("AES/CBC/PKCS5Padding")
+Requires an Initialization Vector (IV).
+CFB (Cipher Feedback):
+
+Example: Cipher.getInstance("AES/CFB/PKCS5Padding")
+Allows data to be processed in smaller segments.
+OFB (Output Feedback):
+
+Example: Cipher.getInstance("AES/OFB/PKCS5Padding")
+Similar to CFB, processes data in smaller segments.
+CTR (Counter):
+
+Example: Cipher.getInstance("AES/CTR/NoPadding")
+Converts a block cipher into a stream cipher.
+GCM (Galois/Counter Mode):
+
+Example: Cipher.getInstance("AES/GCM/NoPadding")
+Provides both confidentiality and authenticity (integrity).
+Padding Schemes:
+PKCS5Padding: Standard padding scheme for block ciphers.
+
+Example: Cipher.getInstance("AES/CBC/PKCS5Padding")
+NoPadding: No padding is applied. The input data must be an exact multiple of the block size.
+
+Example: Cipher.getInstance("AES/CTR/NoPadding")
+ISO10126Padding: Another padding scheme that adds random data to the padding bytes.
+
+Example: Cipher.getInstance("AES/CBC/ISO10126Padding")
+PKCS7Padding: Similar to PKCS5Padding but used for other block sizes as well.
+
+Example: Cipher.getInstance("AES/CBC/PKCS7Padding")

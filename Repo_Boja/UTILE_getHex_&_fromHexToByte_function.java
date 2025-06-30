@@ -1,4 +1,7 @@
 
+/// !!!!!!!!!!! .toString() --> [B@53... (o adresa)
+
+/// !!!!!!!!!! copy first 16 bytes from a byte[] in JAVA --> byte[] IV = Arrays.copyOfRange(original,0, 16);     SAAAU for - classic
 public static String getHex(byte[] values) {
     StringBuilder sb = new StringBuilder();
     for(byte b : values) {
