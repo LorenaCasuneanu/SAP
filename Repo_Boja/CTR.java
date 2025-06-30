@@ -17,10 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class TestCTR {
 
-	public static void desEncrypt(
-			String inputFile, 
-			String outputFile,
-			byte[] key) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public static void desEncrypt(String inputFile, String outputFile, byte[] key) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		File inputF = new File(inputFile);
 		if(!inputF.exists()) {
 			throw new UnsupportedOperationException("No FILE");
@@ -70,8 +67,7 @@ public class TestCTR {
 		
 	}
 	
-	public static void desDecrypt(
-			String inputFile, String outputFile, byte[] key) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public static void desDecrypt(String inputFile, String outputFile, byte[] key) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		
 		File inputF = new File(inputFile);
 		if(!inputF.exists()) {

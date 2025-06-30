@@ -61,8 +61,7 @@ public class TestKeystore {
 		}
 	}
 	
-	public static PublicKey getPublicKey(
-			KeyStore ks, String alias) throws KeyStoreException {
+	public static PublicKey getPublicKey(KeyStore ks, String alias) throws KeyStoreException {
 		if(ks != null && ks.containsAlias(alias)) {
 			PublicKey pub = ks.getCertificate(alias).getPublicKey();
 			return pub;
@@ -71,9 +70,7 @@ public class TestKeystore {
 		}
 	}
 	
-	public static PrivateKey getPrivateKey(
-			KeyStore ks, String alias, String ksPass
-			) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException {
+	public static PrivateKey getPrivateKey(KeyStore ks, String alias, String ksPass) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException {
 		if(ks != null && ks.containsAlias(alias) && 
 				ks.isKeyEntry(alias)) {
 			PrivateKey priv = 
@@ -91,10 +88,8 @@ public class TestKeystore {
 			throw new UnsupportedOperationException("Missing file");
 		}
 		FileInputStream fis = new FileInputStream(file);
-		CertificateFactory factory =  
-				CertificateFactory.getInstance("X.509");
-		X509Certificate cert = 
-				(X509Certificate) factory.generateCertificate(fis);
+		CertificateFactory factory =  CertificateFactory.getInstance("X.509");
+		X509Certificate cert = (X509Certificate) factory.generateCertificate(fis);
 		return cert.getPublicKey();
 	}
 	
@@ -110,16 +105,13 @@ public class TestKeystore {
 		return cipher.doFinal(input);
 	}
 	
-	public static byte[] getSymmetricRandomKey(
-			int noBits, String algorithm) throws NoSuchAlgorithmException {
-		KeyGenerator keyGenerator = 
-				KeyGenerator.getInstance(algorithm);
+	public static byte[] getSymmetricRandomKey(int noBits, String algorithm) throws NoSuchAlgorithmException {
+		KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
 		keyGenerator.init(noBits);
 		return keyGenerator.generateKey().getEncoded();
 	}
 	
-	public static byte[] getDigitalSignature(
-			String file, PrivateKey privateKey) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException {
+	public static byte[] getDigitalSignature(String file, PrivateKey privateKey) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException {
 		File inputFile = new File(file);
 		if(!inputFile.exists()) {
 			throw new UnsupportedOperationException("No FILE");
@@ -134,13 +126,10 @@ public class TestKeystore {
 		
 		fis.close();
 		
-		//TO DO: when the file is processed in blocks
-		
 		return signature.sign();	
 	}
 	
-	public static boolean isValid(
-			String filename, byte[] signature, PublicKey publicKey) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException {
+	public static boolean isValid(String filename, byte[] signature, PublicKey publicKey) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException {
 		
 		File inputFile = new File(filename);
 		if(!inputFile.exists()) {
@@ -179,41 +168,31 @@ public class TestKeystore {
 		System.out.println(Utility.getHex(ism1Priv.getEncoded()));
 		
 		//get public key from X509 cert file
-		PublicKey ism1pub2 = getPublicFromX509(
-				"ISMCertificateX509.cer");
+		PublicKey ism1pub2 = getPublicFromX509("ISMCertificateX509.cer");
 		System.out.println("ISMASERO Public: ");
 		System.out.println(Utility.getHex(ism1pub2.getEncoded()));
 		
-		byte[] randomAESKey = 
-				getSymmetricRandomKey(128, "AES");
+		byte[] randomAESKey = getSymmetricRandomKey(128, "AES");
 		System.out.println("Random AES Key :");
 		System.out.println(Utility.getHex(randomAESKey));
 		
+		byte[] encAESKey = encrypt(ism1Pub, randomAESKey);
+		System.out.println("Encrypted AES Key: " + Utility.getHex(encAESKey));
 		
-		byte[] encAESKey = 
-				encrypt(ism1Pub, randomAESKey);
-		System.out.println("Encrypted AES Key: " + 
-				Utility.getHex(encAESKey));
+		byte[] initialAESKey = decrypt(ism1Priv, encAESKey);
+		System.out.println("Initial AES Key: " + Utility.getHex(initialAESKey));
 		
-		byte[] initialAESKey = 
-				decrypt(ism1Priv, encAESKey);
-		System.out.println("Initial AES Key: " + 
-				Utility.getHex(initialAESKey));
-		
-		byte[] msgSignature = 
-				getDigitalSignature("Msg.txt", ism1Priv);
+		byte[] msgSignature = getDigitalSignature("Msg.txt", ism1Priv);
 		System.out.println("digital signature: ");
 		System.out.println(Utility.getHex(msgSignature));
 		
-		//at client
+		//Signature validation
 		if(isValid("Msg2.txt", msgSignature, ism1pub2)) {
 			System.out.println("The msg is valid");
 		} else {
 			System.out.println("Someone changed the msg");
 		}
-		
-		
-		
+			
 	}
 
 }

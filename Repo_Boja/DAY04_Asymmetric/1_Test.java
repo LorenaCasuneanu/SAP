@@ -31,8 +31,7 @@ public class Test {
 
 	public static void main(String[] args) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, SignatureException {
 
-		KeyStore ks = KeyStoreManager.getKeyStore(
-				"ismkeystore.ks", "passks", "pkcs12");
+		KeyStore ks = KeyStoreManager.getKeyStore("ismkeystore.ks", "passks", "pkcs12");
 		KeyStoreManager.list(ks);
 		
 		PublicKey pubIsm1 = KeyStoreManager.getPublicKey("ismkey1", ks);
@@ -43,8 +42,7 @@ public class Test {
 		System.out.println("Private key");
 		System.out.println(getHexString(privIsm1.getEncoded()));
 		
-		PublicKey pubIsm1FromCert = 
-				PublicCertificate.getCertificateKey("ISMCertificateX509.cer");
+		PublicKey pubIsm1FromCert = PublicCertificate.getCertificateKey("ISMCertificateX509.cer");
 		System.out.println("Public key from certificate: ");
 		System.out.println(getHexString(pubIsm1FromCert.getEncoded()));
 		
@@ -56,39 +54,31 @@ public class Test {
 		System.out.println("AES Random key: ");
 		System.out.println(getHexString(randomAESKey));
 		
-		byte[] encryptedAESKey = 
-				RSACipher.encrypt(pubIsm1FromCert, randomAESKey);
+		byte[] encryptedAESKey = RSACipher.encrypt(pubIsm1FromCert, randomAESKey);
 		
 		System.out.println("Encrypted AES key with RSA: ");
 		System.out.println(getHexString(encryptedAESKey));
 		
-		byte[] randomAESKeyCopy = 
-				RSACipher.decrypt(privIsm1, encryptedAESKey);
+		byte[] randomAESKeyCopy = RSACipher.decrypt(privIsm1, encryptedAESKey);
 		System.out.println("AES Key copy: ");
 		System.out.println(getHexString(randomAESKeyCopy));
-		
 		
 		//digital signatures
 		//generate a digital signature (RSA) for a file with private key
 		//validate the digital signature with public key
 		
-		byte[] signature = 
-				RSACipher.signFile("msg.txt", privIsm1);
+		byte[] signature = RSACipher.signFile("msg.txt", privIsm1);
 		
 		System.out.println("Digital signature value: ");
 		System.out.println(getHexString(signature));
 		
-		if(RSACipher.hasValidSignature(
-				"msg_copy.txt", pubIsm1FromCert, signature))
+		if(RSACipher.hasValidSignature("msg_copy.txt", pubIsm1FromCert, signature))
 		{
 			System.out.println("File is the original one");
 		} else {
 			System.out.println("File has been changed");
 		}
-		
-		
-		//using elliptic curves EC
-		
+
 	}
 
 }

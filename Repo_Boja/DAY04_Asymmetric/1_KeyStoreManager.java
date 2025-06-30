@@ -15,10 +15,8 @@ import java.util.Enumeration;
 
 public class KeyStoreManager {
 	
-	public static KeyStore getKeyStore(
-			String keyStoreFile,
-			String keyStorePass, 
-			String keyStoreType) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+	public static KeyStore getKeyStore(String keyStoreFile, String keyStorePass, String keyStoreType) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		
 		File file = new File(keyStoreFile);
 		if(!file.exists()) {
 			throw new UnsupportedOperationException("Missing key store file");
@@ -34,6 +32,7 @@ public class KeyStoreManager {
 	}
 	
 	public static void list(KeyStore ks) throws KeyStoreException {
+		
 		System.out.println("Key store content: ");
 		Enumeration<String> aliases = ks.aliases();
 		
@@ -50,6 +49,7 @@ public class KeyStoreManager {
 	}
 	
 	public static PublicKey getPublicKey(String alias, KeyStore ks) throws KeyStoreException {
+		
 		if(ks == null) {
 			throw new UnsupportedOperationException("Missing Key Store");
 		}
@@ -60,8 +60,8 @@ public class KeyStoreManager {
 		}
 	}
 	
-	public static PrivateKey getPrivateKey(
-			String alias, String keyPass, KeyStore ks ) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException {
+	public static PrivateKey getPrivateKey(String alias, String keyPass, KeyStore ks ) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException {
+		
 		if(ks == null) {
 			throw new UnsupportedOperationException("Missing Key Store");
 		}

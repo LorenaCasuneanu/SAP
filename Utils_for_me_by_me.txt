@@ -8,12 +8,18 @@ Setup Cpp:
 !! nu uita sa pui libcrypto-1_1.dll de la openssl langa exe (Debug file) in proiectul de Visual Studio
 Openssl library este pe 86bit 
 
-Pentru keyStore vom folosi KeyTool:
+KeyStore Java:
+Pentru keyStore vom folosi KeyTool: --> cmd in openssl111l-build\bin
 
 keytool.exe -genkey -keyalg RSA -alias ismkey1 -keypass passism1 -storepass passks -keystore ismkeystore.ks -dname "cn=Casuneanu Lorena, ou=Casuneanu Lorena, o=IT&C Security Master, c=RO"
 keytool.exe -export -alias ismkey1 -file ISMCertificateX509.cer -keystore ismkeystore.ks -storepass passks
 keytool -importcert -file certificate.cer -keystore keystore.jks -alias "ismasero"
 
-- cmd in C:\Master\Semestrul_I\SAP\openssl111l-build\bin
+sau, varianta cu numele meu
+keytool.exe -genkey -keyalg RSA -alias ismkey1 -keypass passism1 -storepass passks -keystore ismkeystore.ks -dname "cn=CasuneanuLorena, ou=CasuneanuLorena, o=IT&C Security Master, c=RO"
 
+- cmd in openssl111l-build\bin
+
+-->daca vrem sa listam ce este in keystore:
+-list -keystore ismkeystore.ks
 
