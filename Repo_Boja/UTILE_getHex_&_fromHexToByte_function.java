@@ -19,7 +19,7 @@ private static byte[] hexStringToByteArray(String s) {
 }
 
 
---> // Calculeaza pentru fiecare fisier hash (dar e functia separata)
+--> // Calculeaza pentru fiecare fisier hash (pentru HASH e functia separata)
     File repository = new File("users");
     if(repository.exists() && repository.isDirectory()) {
         //print location content
@@ -36,7 +36,7 @@ private static byte[] hexStringToByteArray(String s) {
         }
     }
 
-  --> //CITIRE DUPA UN ANUMIT CHARATER DINTR-UN FILE
+  --> //CITIRE DUPA UN ANUMIT CHARACTER DINTR-UN FILE
     {
         String text = "Ana = o2";
         char delimiter = '=';
@@ -61,4 +61,48 @@ private static byte[] hexStringToByteArray(String s) {
 	{	///from string to numbers
 		Integer initialValue = Integer.parseInt(hexRep,16);
 		initialValue = Integer.parseInt(binaryRep,2);
+    }
+
+--> // READ all bytes from a file 
+    {
+		File fileFoundedKey = new File(myFilesFounded);
+		if(!fileFoundedKey.exists()) {
+			throw new FileNotFoundException();
+		}
+		FileInputStream fisKey = new FileInputStream(fileFoundedKey);	
+		byte[] key = fisKey.readAllBytes();	
+		fisKey.close();
+    }
+
+--> // SCRIE all bytes of a byte[] to a file 
+    {
+    	File outputF = new File("myresponse.txt");
+		if(!outputF.exists()){
+			outputF.createNewFile();
+		}
+		FileOutputStream fos = new FileOutputStream(outputF);
+		fos.write(iban.getBytes());
+		fos.close();
+    } 
+//SAAAAAAAU, DACA vreau sa scriu un STRING intr-un fisier
+    {
+		File msgFile = new File("Message.txt");
+		if(!msgFile.exists()) {
+			msgFile.createNewFile();
+		}
+		
+		//write into a text file, append mode
+		FileWriter fileWriter = new FileWriter(msgFile, true);
+		PrintWriter printWriter = new PrintWriter(fileWriter);
+		printWriter.println("This is a secret message");
+		printWriter.println("Don't tell anyone");
+		printWriter.close();
+    }
+
+
+--> // Sa afisezi byte[] sub forma de STRING
+    {
+    	byte[] userPWD = AES_CBC_Decrypt(myFilesFounded, IV, pwd.getBytes());
+		System.out.println("The user password is: ");
+		System.out.println(new String(userPWD));
     }

@@ -1,12 +1,15 @@
 package ro.ism.ase.lorena.casuneanu;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -24,6 +27,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class JAVA_exam_Iulie_2022 {
 	
+	public static String getHex(byte[] values) {
+	    StringBuilder sb = new StringBuilder();
+	    for(byte b : values) {
+	        sb.append(String.format(" %02x", b));
+	    }
+	    return sb.toString();
+	}
+	
 	private static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
@@ -34,7 +45,7 @@ public class JAVA_exam_Iulie_2022 {
         return data;
     }
 	
-	public static void AESDecrypt(String inputFile, String outputFile, byte[] key) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public static void AES_CTR_Decrypt(String inputFile, String outputFile, byte[] key) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		
 		File inputF = new File(inputFile);
 		if(!inputF.exists()) {
@@ -54,7 +65,7 @@ public class JAVA_exam_Iulie_2022 {
 		byte[] IV = new byte[cipher.getBlockSize()];
 		//fis.read(IV);
 		//for (int i=0;i<cipher.getBlockSize(); i++)
-		IV[0] = 0x33;
+		IV[15] = 0x33;
 		
 		SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
 		IvParameterSpec ivSpec = new IvParameterSpec(IV);
@@ -103,6 +114,44 @@ public class JAVA_exam_Iulie_2022 {
 		return result;
 	}
 	
+	public static void AES_EBC_encrypt(String inputFile, String encrypteFile, byte[] key) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+	{
+		File inputF = new File(inputFile);
+		if(!inputF.exists()) {
+			throw new UnsupportedOperationException("File missing");
+		}
+		File outputF = new File(encrypteFile);
+		if(!outputF.exists()) {
+			outputF.createNewFile();
+		}
+		
+		FileInputStream fis = new FileInputStream(inputF);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		
+		FileOutputStream fos = new FileOutputStream(outputF);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		
+		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+		cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+		
+		byte[] buffer = new byte[cipher.getBlockSize()];
+		
+		while(true) {
+			int noBytes = bis.read(buffer);
+			if(noBytes == -1) {
+				break;
+			}
+			byte[] output = cipher.update(buffer,0,noBytes);
+			bos.write(output);
+		}
+		byte[] output = cipher.doFinal();
+		bos.write(output);
+		
+		bis.close();
+		bos.close();	
+	}
+	
 	public static void main(String[] args) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		
 		//Exer 1
@@ -110,7 +159,7 @@ public class JAVA_exam_Iulie_2022 {
 		byte[] BytesHMAC = hexStringToByteArray(HMAC);
 		String myFilesFounded = null;
 		
-		byte[] MD5Hash = null;
+
 		
 		File repository = new File("Messages");
 		if(repository.exists() && repository.isDirectory()) {
@@ -143,13 +192,26 @@ public class JAVA_exam_Iulie_2022 {
 		BufferedReader bufferReader = new BufferedReader(fileReader);
 		String line = bufferReader.readLine();;
 		bufferReader.close();
-		MD5Hash = getHash(line);
+		
+		byte[] MD5Hash = getHash(line);
+
+		System.out.println(getHex(MD5Hash));
 		
 		//Exer 3
-		AESDecrypt("Question_696.enc", "Question_696_dec.txt", MD5Hash);
+		AES_CTR_Decrypt("Question_696.enc", "Question_696_dec.txt", MD5Hash);
+		
+		//Exer 4
+    	File outputF = new File("response.txt");
+		if(!outputF.exists()){
+			outputF.createNewFile();
+		}
+		FileWriter fileWriter = new FileWriter(outputF, false);
+		PrintWriter printWriter = new PrintWriter(fileWriter);
+		printWriter.write("Casuneanu Cristiana-Lorena");
+		printWriter.close();
 		
 		
-		
+		AES_EBC_encrypt("response.txt","response.enc", MD5Hash);
 		
 	}
 }
